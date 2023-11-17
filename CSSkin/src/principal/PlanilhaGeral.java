@@ -1,45 +1,75 @@
 package principal;
 
-import java.util.Scanner;
-
-import javax.swing.JOptionPane;
-
+import javax.swing.*;
 
 public class PlanilhaGeral {
+    
 	public static void main(String[] args) {
-		Scanner entrada = new Scanner (System.in);
-		
-		double csgoEmpire = 0.005820; //Representa €0,01 
-		double csgoPolygon = 0.000741; //Representa $0,01
-		double valorEmpire, valorcsgoPolygon; 
-		double dolar = 1.05;
-		double euro = 1.00;
-		double real = 5.29;
-		
-		String dado1 = JOptionPane.showInputDialog(
-				"Conversão para CsgoPolygon: "); 
-					dado1 = dado1.replace(",", "."); 
-						valorEmpire = Double.parseDouble(dado1);
-						
-		double conv = valorEmpire * csgoEmpire / 0.01;
-		valorcsgoPolygon = conv * dolar / euro;
-		double csPolygon = 1350 * valorcsgoPolygon;
-		float csEmpire = (float) (csPolygon * csgoPolygon / 0.582);
-		
-//		System.out.printf("Valor da Skin na Empire em Euro €: %.2f\n", conv);
-//		System.out.printf("Valor da Skin em Dolar $: %.2f\n", valorcsgoPolygon);
-//		System.out.printf("Valor de venda na Polygon: %.0f", csPolygon);
-		
-		// Crie uma mensagem com os resultados
-        String mensagem = "Valor em Euro €: " + String.format("%.2f", conv) + "\n" +
-                "Valor em Dolar $: " + String.format("%.2f", valorcsgoPolygon) + "\n" +
-                "Valor de venda na Polygon: " + String.format("%.0f", csPolygon) + "\n" + 
-                "Valor de venda na Empire: " + String.format("%.2f", csEmpire);
+        // Cria um JFrame
+        JFrame frame = new JFrame("Conversão de Moedas");
 
-        // Exiba a mensagem em uma janela de diálogo
-        JOptionPane.showMessageDialog(null, mensagem, "Preço", JOptionPane.INFORMATION_MESSAGE);
-		
-		
-		entrada.close();
-	}
+        // Cria um painel
+        JPanel panel = new JPanel();
+        frame.getContentPane().add(panel);
+
+        // Define o layout do painel
+        GroupLayout layout = new GroupLayout(panel);
+        panel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        // Cria componentes
+        JLabel label = new JLabel("Insira o valor em Euro €:");
+        JTextField valorField = new JTextField(10);
+        JButton calcularButton = new JButton("Calcular");
+
+        // Adiciona componentes ao layout
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addComponent(label)
+                .addComponent(valorField)
+                .addComponent(calcularButton)
+        );
+
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label)
+                        .addComponent(valorField)
+                        .addComponent(calcularButton))
+        );
+
+        // Adiciona a ação do botão
+        calcularButton.addActionListener(e -> {
+            try {
+                String dado1 = valorField.getText().replace(",", ".");
+                double valorEmpire = Double.parseDouble(dado1);
+
+                // Realize os cálculos
+                double csEmpire = 0.005820;
+                double dolar = 1.05;
+                double euro = 1.00;
+                double conv = valorEmpire * csEmpire / 0.01;
+                double valorcsgoPolygon = conv * dolar / euro;
+                double csPolygon = 1350 * valorcsgoPolygon;
+
+                // Exibe os resultados em uma janela de diálogo
+                JOptionPane.showMessageDialog(frame,
+                        "Valor da Skin na Empire em Euro €: " + String.format("%.2f", conv) + "\n" +
+                                "Valor da Skin em Dolar $: " + String.format("%.2f", valorcsgoPolygon) + "\n" +
+                                "Valor de venda na Polygon: " + String.format("%.0f", csPolygon),
+                        "Resultados",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Por favor, insira um valor válido em Euro.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // Configurações do frame
+        frame.setSize(300, 150);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
